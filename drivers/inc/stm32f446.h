@@ -86,7 +86,7 @@
 #define I2C1_BASEADDR				(APB1PERIPH_BASE + 0x5400)
 #define I2C2_BASEADDR				(APB1PERIPH_BASE + 0x5800)
 #define I2C3_BASEADDR				(APB1PERIPH_BASE + 0x5C00)
-
+           
 #define SPI2_BASEADDR				(APB1PERIPH_BASE + 0x3800)
 #define SPI3_BASEADDR				(APB1PERIPH_BASE + 0x3C00)
 
@@ -196,6 +196,21 @@ typedef struct
 	_vo uint32_t CFGR;
 }SYSCFG_RegDef_t;
 
+/*************************Peripheral Register definition structure for SYSCFG***************************/
+
+typedef struct
+{
+    _vo uint32_t CR1;
+    _vo uint32_t CR2;
+    _vo uint32_t SR;
+    _vo uint32_t DR;
+    _vo uint32_t CRCPR;
+    _vo uint32_t RXCRCR;
+    _vo uint32_t TXCRCR;
+    _vo uint32_t I2SCFGR;
+    _vo uint32_t I2SPR;
+}SPI_RegDef_t;
+ 
 
 /*
  * peripheral definitions   ( Peripheral base address typecasted to xxx_RegDef_t)
@@ -212,6 +227,12 @@ typedef struct
 
 
 #define RCC							((RCC_RegDef_t*)RCC_BASEADDR)
+
+#define SPI1                        ((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2                        ((SPI_RegDef_t*)SPI2_BASEADDR)
+#define SPI3                        ((SPI_RegDef_t*)SPI3_BASEADDR)
+#define SPI4                        ((SPI_RegDef_t*)SPI4_BASEADDR)
+
 
 
 /*
@@ -365,5 +386,6 @@ typedef struct
 
 
 #include "stm32f446_gpio_driver.h"
+#include "stm32f446_spi_driver.h"
 
 #endif /* INC_STM32F446_H_ */
