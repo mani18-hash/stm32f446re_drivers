@@ -9,6 +9,8 @@
 #define INC_STM32F446_H_
 
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 #define _vo volatile
 
 /*
@@ -86,7 +88,7 @@
 #define I2C1_BASEADDR				(APB1PERIPH_BASE + 0x5400)
 #define I2C2_BASEADDR				(APB1PERIPH_BASE + 0x5800)
 #define I2C3_BASEADDR				(APB1PERIPH_BASE + 0x5C00)
-           
+
 #define SPI2_BASEADDR				(APB1PERIPH_BASE + 0x3800)
 #define SPI3_BASEADDR				(APB1PERIPH_BASE + 0x3C00)
 
@@ -196,21 +198,19 @@ typedef struct
 	_vo uint32_t CFGR;
 }SYSCFG_RegDef_t;
 
-/*************************Peripheral Register definition structure for SYSCFG***************************/
+/*************************Peripheral Register definition structure for SPIx***************************/
 
 typedef struct
 {
-    _vo uint32_t CR1;
-    _vo uint32_t CR2;
-    _vo uint32_t SR;
-    _vo uint32_t DR;
-    _vo uint32_t CRCPR;
-    _vo uint32_t RXCRCR;
-    _vo uint32_t TXCRCR;
-    _vo uint32_t I2SCFGR;
-    _vo uint32_t I2SPR;
+	_vo uint32_t CR1;
+	_vo uint32_t CR2;
+	_vo uint32_t SR;
+	_vo uint32_t DR;
+	_vo uint32_t CRCPR;
+	_vo uint32_t RXCRCR;
+	_vo uint32_t I2SCFGR;
+	_vo uint32_t I2SPR;
 }SPI_RegDef_t;
- 
 
 /*
  * peripheral definitions   ( Peripheral base address typecasted to xxx_RegDef_t)
@@ -228,13 +228,10 @@ typedef struct
 
 #define RCC							((RCC_RegDef_t*)RCC_BASEADDR)
 
-#define SPI1                        ((SPI_RegDef_t*)SPI1_BASEADDR)
-#define SPI2                        ((SPI_RegDef_t*)SPI2_BASEADDR)
-#define SPI3                        ((SPI_RegDef_t*)SPI3_BASEADDR)
-#define SPI4                        ((SPI_RegDef_t*)SPI4_BASEADDR)
-
-
-
+#define SPI1						((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2						((SPI_RegDef_t*)SPI2_BASEADDR)
+#define SPI3						((SPI_RegDef_t*)SPI3_BASEADDR)
+#define SPI4						((SPI_RegDef_t*)SPI4_BASEADDR)
 /*
  * Clock Enable Macros for GPIOx peripherals
  */
@@ -342,22 +339,70 @@ typedef struct
 #define RESET						DISABLE
 #define GPIO_PIN_SET				SET
 #define GPIO_PIN_RESET				RESET
+#define FLAG_SET					SET
+#define FLAG_RESET					RESET
+/*
+ * Bit definition macros for SPI_CR1
+ */
 
+#define SPI_CR1_CPHA				0
+#define SPI_CR1_CPOL				1
+#define SPI_CR1_MSTR				2
+#define SPI_CR1_BR					3
+#define SPI_CR1_SPE					6
+#define SPI_CR1_LSBFIRST			7
+#define SPI_CR1_SSI					8
+#define SPI_CR1_SSM					9
+#define SPI_CR1_RXONLY			   10
+#define SPI_CR1_DFF				   11
+#define SPI_CR1_CRCNEXT			   12
+#define SPI_CR1_CRCEN			   13
+#define SPI_CR1_BIDIOE			   14
+#define SPI_CR1_BIDIMODE		   15
+
+/*
+ * Bit definition macros for SPI_CR2
+ */
+
+#define SPI_CR2_RXDMAEN			    0
+#define SPI_CR2_TXDMAEN			    1
+#define SPI_CR2_SSOE			    2
+#define SPI_CR2_FRF  			    4
+#define SPI_CR2_ERRIE			    5
+#define SPI_CR2_RXNEIE			    6
+#define SPI_CR2_TXEIE			    7
+
+/*
+ * Bit definition macros for SPI_SR
+ */
+
+#define SPI_SR_RXNE		            0
+#define SPI_SR_TXE		            1
+#define SPI_SR_CHSIDE	            2
+#define SPI_SR_UDR		            3
+#define SPI_SR_CRCERR		        4
+#define SPI_SR_MODF		            5
+#define SPI_SR_OVR		            6
+#define SPI_SR_BSY		            7
+#define SPI_SR_FRE		            8
 
 /*
  * MACROS TO RESET GPIOx PERIPHERALS
  */
 
-#define GPIOA_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 0));	(RCC->AHB1RSTR &= ~(1 << 0)); }while(0)
-#define GPIOB_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 1));	(RCC->AHB1RSTR &= ~(1 << 1)); }while(0)
-#define GPIOC_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 2));	(RCC->AHB1RSTR &= ~(1 << 2)); }while(0)
-#define GPIOD_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 3));	(RCC->AHB1RSTR &= ~(1 << 3)); }while(0)
-#define GPIOE_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 4));	(RCC->AHB1RSTR &= ~(1 << 4)); }while(0)
-#define GPIOF_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 5));	(RCC->AHB1RSTR &= ~(1 << 5)); }while(0)
-#define GPIOG_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 6));	(RCC->AHB1RSTR &= ~(1 << 6)); }while(0)
-#define GPIOH_REG_RESET()			do{ (RCC->AHB1RSTR |= (1 << 7));	(RCC->AHB1RSTR &= ~(1 << 7)); }while(0)
+#define GPIOA_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 0) );	( RCC->AHB1RSTR &= ~(1 << 0) ); }while(0)
+#define GPIOB_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 1) );	( RCC->AHB1RSTR &= ~(1 << 1) ); }while(0)
+#define GPIOC_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 2) );	( RCC->AHB1RSTR &= ~(1 << 2) ); }while(0)
+#define GPIOD_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 3) );	( RCC->AHB1RSTR &= ~(1 << 3) ); }while(0)
+#define GPIOE_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 4) );	( RCC->AHB1RSTR &= ~(1 << 4) ); }while(0)
+#define GPIOF_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 5) );	( RCC->AHB1RSTR &= ~(1 << 5) ); }while(0)
+#define GPIOG_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 6) );	( RCC->AHB1RSTR &= ~(1 << 6) ); }while(0)
+#define GPIOH_REG_RESET()			do{ ( RCC->AHB1RSTR |= (1 << 7) );	( RCC->AHB1RSTR &= ~(1 << 7) ); }while(0)
 
-
+#define SPI1_REG_RESET()			do{ ( RCC->APB2RSTR |= ( 1 << 12));  ( RCC->APB2RSTR &= ~( 1 << 12)); }while(0)
+#define SPI2_REG_RESET()			do{ ( RCC->APB1RSTR |= ( 1 << 14));  ( RCC->APB1RSTR &= ~( 1 << 14)); }while(0)
+#define SPI3_REG_RESET()			do{ ( RCC->APB1RSTR |= ( 1 << 15));  ( RCC->APB1RSTR &= ~( 1 << 15)); }while(0)
+#define SPI4_REG_RESET()			do{ ( RCC->APB2RSTR |= ( 1 << 13));  ( RCC->APB2RSTR &= ~( 1 << 13)); }while(0)			
 /*
  * returns port code
  */
