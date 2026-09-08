@@ -47,12 +47,12 @@ void SPI_GPIOInits(void)
 	GPIO_Init(&SPIPins);
 
 	//MISO
-	SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_14;
+/*	SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_14;
 	GPIO_Init(&SPIPins);
 
 	//NSS
 	SPIPins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
-	GPIO_Init(&SPIPins);
+	GPIO_Init(&SPIPins);*/
 }
 
 
@@ -86,7 +86,15 @@ int main(void)
 	// initializing spi peripheral
 	SPI_Inits();
 
+	//this makes SSi bit to high avoiding MODF error
+	SPI_SSIConfig(SPI2, ENABLE);
+
+	//enable spi
+	SPI_PeripheralControl(SPI2, ENABLE);
 	// Send Data
-	SPI_SendData(SPI2, user_data, strlen(user_data));
+	SPI_SendData(SPI2, (uint8_t*)user_data, strlen(user_data));
+
+	//disable clock
+	SPI_PeripheralControl(SPI2, DISABLE);
 	return 0;
 }

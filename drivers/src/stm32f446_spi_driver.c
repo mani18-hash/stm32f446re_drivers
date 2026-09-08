@@ -562,5 +562,54 @@ configurations and adjusts the data reception accordingly.
 
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint8_t Len)
 {
+	// Checck if length is greater than 0
+	while(Len > 0)
+	{
+		// wait until RXNE is set
+		while(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET );
 
+		// check the DFF bit in CR1
+		if( pSPIx->CR1 & ( 1 << SPI_CR1_DFF ) )
+		{
+			// 16 bit DFF
+			// 1. load the data in to the pRxBuffer
+			*((uint16_t*)pRxBuffer) = pSPIx->DR;
+			Len--;
+			Len--;
+			(uint16_t*)pRxBuffer++;
+		}
+		else
+		{
+			// 8 bit
+			*(pRxBuffer) = pSPIx->DR;
+			Len--;
+			pRxBuffer++;
+		}
+	}
+}
+
+
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if(EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
+}
+
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if(EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
 }
