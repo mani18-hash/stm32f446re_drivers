@@ -32,8 +32,27 @@ typedef struct
 {
 	SPI_RegDef_t *pSPIx;
 	SPI_Config_t SPIConfig;
+	uint8_t 	 *pTxBuffer;
+	uint8_t      *pRxBuffer;
+	uint32_t     TxLen;
+	uint32_t     RxLen;
+	uint8_t      TxState;
+	uint8_t      RxState;
 }SPI_Handle_t;
 
+/*
+ * SPI Application states
+ */
+#define SPI_READY												0
+#define SPI_BUSY_IN_RX											1
+#define SPI_BUSY_IN_TX											2
+
+/*
+ * Possible SPI Application events
+ */
+#define SPI_EVENT_TX_CMPLT										0
+#define SPI_EVENT_RX_CMPLT										1
+#define SPI_EVENT_OVR_CMPLT										2
 /*
  * SPI_DeviceMode
  */
@@ -116,6 +135,9 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint8_t Len);
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint8_t Len);
 
+uint8_t SPI_SendDataWithIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint8_t Len);
+uint8_t SPI_ReceiveDataWithIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint8_t Len);
+
 
 /*
  * other peripheral APIs
@@ -123,4 +145,8 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint8_t Len);
 
 void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+void SPI_IRQHandling(SPI_Handle_t *pSPIHandle);
+void SPI_ClearOVRFlag(SPI_Handle_t *pSPIHandle);
+void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle);
+void SPI_CloseReception(SPI_Handle_t *pSPIHandle);
 #endif /* INC_STM32F446_SPI_DRIVER_H_ */
