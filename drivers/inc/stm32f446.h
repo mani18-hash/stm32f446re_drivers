@@ -8,6 +8,7 @@
 #ifndef INC_STM32F446_H_
 #define INC_STM32F446_H_
 
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -212,6 +213,20 @@ typedef struct
 	_vo uint32_t I2SPR;
 }SPI_RegDef_t;
 
+/*************************Peripheral Register definition structure for I2Cx***************************/
+
+typedef struct
+{
+	_vo uint32_t CR1;
+	_vo uint32_t CR2;
+	_vo uint32_t OAR1;
+	_vo uint32_t OAR2;
+	_vo uint32_t SR1;
+	_vo uint32_t SR2;
+	_vo uint32_t CCR;
+	_vo uint32_t TRISE;
+	_vo uint32_t FLTR;
+}I2C_RegDef_t;
 /*
  * peripheral definitions   ( Peripheral base address typecasted to xxx_RegDef_t)
  */
@@ -232,6 +247,10 @@ typedef struct
 #define SPI2						((SPI_RegDef_t*)SPI2_BASEADDR)
 #define SPI3						((SPI_RegDef_t*)SPI3_BASEADDR)
 #define SPI4						((SPI_RegDef_t*)SPI4_BASEADDR)
+
+#define I2C1						((I2C_RegDef_t*)I2C1_BASEADDR)
+#define I2C2						((I2C_RegDef_t*)I2C2_BASEADDR)
+#define I2C3						((I2C_RegDef_t*)I2C3_BASEADDR)
 /*
  * Clock Enable Macros for GPIOx peripherals
  */
@@ -386,6 +405,62 @@ typedef struct
 #define SPI_SR_BSY		            7
 #define SPI_SR_FRE		            8
 
+
+/*
+ * Bit definition macros for I2C_CR1
+ */
+
+#define I2C_CR1_PE		            0
+#define I2C_CR1_NOSTRETCH		    7
+#define I2C_CR1_START	            8
+#define I2C_CR1_STOP		        9
+#define I2C_CR1_ACK		            10
+#define I2C_CR1_SWRST		        15
+
+/*
+ * Bit definition macros for I2C_CR2
+ */
+
+#define I2C_CR2_FREQ				0
+#define I2C_CR2_ITERREN				8
+#define I2C_CR2_ITEVTEN				9
+#define I2C_CR2_ITBUFEN				10
+
+/*
+ * Bit definition macros for I2C_SR1
+ */
+
+#define I2C_SR1_SB					0
+#define I2C_SR1_ADDR				1
+#define I2C_SR1_BTF					2
+#define I2C_SR1_ADD10				3
+#define I2C_SR1_STOPF				4
+#define I2C_SR1_RXNE				6
+#define I2C_SR1_TXE					7
+#define I2C_SR1_BERR				8
+#define I2C_SR1_ARLO				9
+#define I2C_SR1_AF					10
+#define I2C_SR1_OVR			  		11
+#define I2C_SR1_TIMEOUT				14
+
+/*
+ * Bit definition macros for I2C_SR2
+ */
+
+#define I2C_SR2_MSL					0
+#define I2C_SR2_BUSY				1
+#define I2C_SR2_TRA					2
+#define I2C_SR2_GENCALL				4
+#define I2C_SR2_DUALF				7
+
+/*
+ * Bit definition macros for I2C_CCR
+ */
+
+#define I2C_CCR_					0
+#define I2C_CCR_DUTY				14
+#define I2C_CCR_FS					15
+
 /*
  * MACROS TO RESET GPIOx PERIPHERALS
  */
@@ -432,5 +507,6 @@ typedef struct
 
 #include "stm32f446_gpio_driver.h"
 #include "stm32f446_spi_driver.h"
+#include "stm32f446_i2c_driver.h"
 
 #endif /* INC_STM32F446_H_ */

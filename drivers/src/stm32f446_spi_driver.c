@@ -730,6 +730,7 @@ static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
 static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle)
 {
 	uint8_t temp;
+
 	//clear OVR flag
 	if(pSPIHandle->TxState != SPI_BUSY_IN_TX)
 	{
@@ -755,20 +756,20 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 	uint8_t temp1, temp2;
 	//check for TXE interrupt
 	temp1 = pSPIHandle->pSPIx->SR & ( 1 << SPI_SR_TXE );
-	temp2 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_TXEIXE );
+	temp2 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_TXEIE );
 
 	if( temp1 && temp2 )
 	{
-		spi_txe_interrupt_handle();
+		spi_txe_interrupt_handle(pSPIHandle);
 	}
 
 	//check for RXNE
 	temp1 = pSPIHandle->pSPIx->SR & ( 1 << SPI_SR_RXNE );
-	temp2 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_RXNEIXE );
+	temp2 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_RXNEIE );
 
 	if( temp1 && temp2 )
 	{
-		spi_rxne_interrupt_handle();
+		spi_rxne_interrupt_handle(pSPIHandle);
 	}
 
 	//check for ovr flag
@@ -777,7 +778,10 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 
 	if( temp1 && temp2)
 	{
-		spi_ovr_err_interrupt_handle();
+		spi_ovr_err_interrupt_handle(pSPIHandle);
 	}
 }
 
+__attribute__((weak)) void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEv){
+
+}
